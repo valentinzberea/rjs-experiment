@@ -66,14 +66,12 @@
     require(['jquery'], function($){
 
       $('#change_to_a').click(function(){
-        requireA = requirejs.config(configA);
         requireA(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
           logToResults('Versions on A:');
           logVersions($, _, Backbone);
         });
       });
       $('#change_to_b').click(function(){
-        requireB = requirejs.config(configB);
         requireB(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
           logToResults('Versions on B:');
           logVersions($, _, Backbone);
