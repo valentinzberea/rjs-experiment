@@ -1,12 +1,14 @@
 (function(){
-    var configA = {
-        context: 'A',
+    var config = {
         baseUrl: '/bower_components/',
         paths: {
                 'jquery': 'jquery-1.7.1/jquery',
-                    'underscore': 'underscore-1.4.4/underscore',
-                        'backbone': 'backbone-1.0.0/backbone'
-                        },
+                'underscore': 'underscore-1.4.4/underscore',
+                'backbone': 'backbone-1.0.0/backbone',
+                'jquery-1.8.3': 'jquery-1.8.3/jquery',
+                'underscore-1.4.2': 'underscore-1.4.2/underscore',
+                'backbone-0.9.1': 'backbone-0.9.1/backbone'
+        },
         shim: {
             jquery: {
                 exports: '$'
@@ -17,35 +19,22 @@
             backbone: {
                 deps: ['jquery', 'underscore'],
                 exports: 'Backbone'
-            }
-        },
-        waitSeconds: 30
-    };
-    var configB = {
-        context: 'B',
-        baseUrl: '/bower_components/',
-        paths: {
-            'jquery': 'jquery-1.8.3/jquery',
-            'underscore': 'underscore-1.4.2/underscore',
-            'backbone': 'backbone-0.9.1/backbone'
-        },
-        shim: {
-            jquery: {
+            },
+            'jquery-1.8.3': {
                 exports: '$'
             },
-            underscore: {
+            'underscore-1.4.2': {
                 exports: '_'
             },
-            backbone: {
-                deps: ['jquery', 'underscore'],
+            'backbone-0.9.1': {
+                deps: ['jquery-1.8.3', 'underscore-1.4.2'],
                 exports: 'Backbone'
             }
         },
         waitSeconds: 30
     };
 
-    var requireA = requirejs.config(configA);
-    var requireB = requirejs.config(configB);
+    requirejs.config(config);
 
     var logToResults = function(message){
         results = $('#results').text();
@@ -57,34 +46,34 @@
         logToResults('underscore v.' + _.VERSION);
         logToResults('backbone v.' + Backbone.VERSION);
     };
-    var undefCommonLibraries = function(require){
+    var undefCommonLibraries = function(){
         require.undef('jquery');
         require.undef('underscore');
         require.undef('backbone');
+        require.undef('jquery-1.8.3');
+        require.undef('underscore-1.4.2');
+        require.undef('backbone-0.9.1');
     }
 
-    requireA(['require', 'backbone'], function(require){
+    require(['require', 'backbone'], function(require){
 
         logToResults('Initial versions:');
         logVersions();
 
-        require(['jquery'], function($){
 
-            $('#change_to_a').click(function(){
-                undefCommonLibraries(requireA);
-                requireA(['jquery', 'backbone'], function(){
-                    logToResults('Versions on A:');
-                    logVersions();
-                });
+        $('#change_to_a').click(function(){
+            undefCommonLibraries();
+            require(['backbone'], function(){
+                logToResults('Versions on A:');
+                logVersions();
             });
-            $('#change_to_b').click(function(){
-                undefCommonLibraries(requireB);
-                requireB(['jquery', 'backbone'], function(){
-                    logToResults('Versions on B:');
-                    logVersions();
-                });
+        });
+        $('#change_to_b').click(function(){
+            undefCommonLibraries();
+            require(['jquery-1.8.3', 'underscore-1.4.2', 'backbone-0.9.1'], function(){
+                logToResults('Versions on B:');
+                logVersions();
             });
-
         });
 
     });
